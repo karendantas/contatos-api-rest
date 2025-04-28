@@ -13,6 +13,8 @@ Api simples para CRUD de contatos
 ```bash
     go mod init go-api
     go get github.com/gin-gonic/gin
+    go get github.com/lib/pq
+
     cd cmd
     go run main.go
 ```
