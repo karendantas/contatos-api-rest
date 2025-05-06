@@ -16,7 +16,7 @@ func NewContactRepository(connection *sql.DB) ContactRepository {
 	}
 }
 
-func (c *ContactRepository) GetContacts() ([]model.Contact, error){
+func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
 	query := "select contact_id, contact_name, email from contact"
 	rows, err := c.connection.Query(query)
 
@@ -28,7 +28,7 @@ func (c *ContactRepository) GetContacts() ([]model.Contact, error){
 	var contactList []model.Contact
 	var contactObject model.Contact
 
-	for rows.Next(){
+	for rows.Next() {
 		err = rows.Scan(
 			&contactObject.ID,
 			&contactObject.Name,
