@@ -11,7 +11,7 @@ type contactController struct {
 	contactUseCase usecase.ContactUseCase
 }
 
-func NewContactController( usecase usecase.ContactUseCase) contactController {
+func NewContactController(usecase usecase.ContactUseCase) contactController {
 	return contactController{
 		contactUseCase: usecase,
 	}

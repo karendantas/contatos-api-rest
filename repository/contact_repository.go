@@ -17,7 +17,7 @@ func NewContactRepository(connection *sql.DB) ContactRepository {
 }
 
 func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
-	query := "select contact_id, contact_name, email from contact"
+	query := "select id, name, email, phone from contact"
 	rows, err := c.connection.Query(query)
 
 	if err != nil {
@@ -33,6 +33,7 @@ func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
 			&contactObject.ID,
 			&contactObject.Name,
 			&contactObject.Email,
+			&contactObject.Phone,
 		)
 		if err != nil {
 			fmt.Println(err)
