@@ -24,6 +24,9 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 		contact := api.Group("/contact")
 		{
 			contact.GET("/", ContactController.GetContacts)
+			contact.GET("/:id", ContactController.GetContact)
+			contact.PUT("/:id", ContactController.UpdateContact)
+			// contact.PATCH("/:id", )
 		}
 	}
 
