@@ -24,7 +24,9 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 		contact := api.Group("/contact")
 		{
 			contact.GET("/", ContactController.GetContacts)
+			contact.POST("/", ContactController.CreateContacts )
 		}
 	}
+
 
 }

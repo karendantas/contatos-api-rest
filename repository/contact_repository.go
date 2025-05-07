@@ -17,7 +17,7 @@ func NewContactRepository(connection *sql.DB) ContactRepository {
 }
 
 func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
-	query := "select contact_id, contact_name, email from contact"
+	query := "select id, name, email, phone from contact"
 	rows, err := c.connection.Query(query)
 
 	if err != nil {
@@ -33,6 +33,7 @@ func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
 			&contactObject.ID,
 			&contactObject.Name,
 			&contactObject.Email,
+			&contactObject.Phone,
 		)
 		if err != nil {
 			fmt.Println(err)
@@ -45,4 +46,30 @@ func (c *ContactRepository) GetContacts() ([]model.Contact, error) {
 	rows.Close()
 
 	return contactList, nil
+}
+
+func (c *ContactRepository) CreateContact(contact model.Contact) (int, error) {
+
+	var contact_id int
+	//inserindo no banco e retornando o id gerado automaticamentee
+	query, err := c.connection.Prepare("insert into contact" +
+	"(name, email, phone)" +
+	" values ($1, $2, $3) returning id")
+
+	if err != nil {
+		fmt.Println(err)
+		return 0,err
+	}
+
+
+	err =  query.QueryRow(contact.Name, contact.Email, contact.Phone).Scan(&contact_id)
+
+	if err != nil {
+		fmt.Println(err)
+		return 0,err
+	}
+
+	query.Close()
+
+	return contact_id, nil
 }

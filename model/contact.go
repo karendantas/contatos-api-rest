@@ -1,7 +1,8 @@
 package model
 
 type Contact struct {
-	ID    int    `json:"contact_id"`
-	Name  string `json:"contact_name"`
-	Email string `json:"contact_email"`
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Phone string `json:"phone"`
 }
