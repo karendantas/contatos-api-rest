@@ -73,3 +73,24 @@ func (c *ContactRepository) CreateContact(contact model.Contact) (int, error) {
 
 	return contact_id, nil
 }
+
+func (c *ContactRepository) DeleteContact(contact model.Contact) error {
+	
+	query, err := c.connection.Prepare("delete from contact where id = $1")
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	_, err = query.Exec(contact.ID)
+	
+	query.Close()
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}

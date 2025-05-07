@@ -25,6 +25,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 		{
 			contact.GET("/", ContactController.GetContacts)
 			contact.POST("/", ContactController.CreateContacts )
+			contact.DELETE("/:id", ContactController.DeleteContact )
 		}
 	}
 

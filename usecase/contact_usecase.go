@@ -33,3 +33,7 @@ func (c *ContactUseCase) CreateContacts(contact model.Contact) (model.Contact, e
 
 	return contact, nil
 }
+
+func (c* ContactUseCase) DeleteContact(contact model.Contact) error {
+	return c.repository.DeleteContact(contact)
+}
