@@ -19,8 +19,6 @@ func NewContactController(usecase usecase.ContactUseCase) contactController {
 	}
 }
 
-// aqui onde serão recebidas e tratadas as requisições
-
 func (c *contactController) GetContacts(ctx *gin.Context) {
 
 	contacts, err := c.contactUseCase.GetContacts()
