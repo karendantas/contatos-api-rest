@@ -37,3 +37,11 @@ func (c *ContactUseCase) CreateContacts(contact model.Contact) (model.Contact, e
 func (c* ContactUseCase) DeleteContact(contact model.Contact) error {
 	return c.repository.DeleteContact(contact)
 }
+
+func (c *ContactUseCase) GetContact(id int) (*model.Contact, error) {
+	return c.repository.GetContact(id)
+}
+
+func (c *ContactUseCase) UpdateContact(id int, changedData *model.Contact) (*model.Contact, error) {
+	return c.repository.UpdateContact(id, changedData)
+}

@@ -3,6 +3,10 @@ CREATE TABLE IF NOT EXISTS contact (
     name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     phone VARCHAR(15) NOT NULL
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15) NOT NULL
 );
 
 -- Dados de exemplo
