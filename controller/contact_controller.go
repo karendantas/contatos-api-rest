@@ -13,19 +13,18 @@ type contactController struct {
 	contactUseCase usecase.ContactUseCase
 }
 
-func NewContactController( usecase usecase.ContactUseCase) contactController {
+func NewContactController(usecase usecase.ContactUseCase) contactController {
 	return contactController{
 		contactUseCase: usecase,
 	}
 }
-
-// aqui onde serão recebidas e tratadas as requisições
 
 func (c *contactController) GetContacts(ctx *gin.Context) {
 
 	contacts, err := c.contactUseCase.GetContacts()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	ctx.JSON(http.StatusOK, contacts)
 
@@ -50,7 +49,7 @@ func (c *contactController) CreateContacts(ctx *gin.Context){
 	ctx.JSON(http.StatusCreated, insertedContact)
 }
 
-func (c *contactController) DeleteContact (ctx *gin.Context){
+func (c *contactController) DeleteContact(ctx *gin.Context){
 	idParam := ctx.Param("id")
 
 	contactID, err := strconv.Atoi(idParam)
@@ -70,4 +69,36 @@ func (c *contactController) DeleteContact (ctx *gin.Context){
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Contato deletado com sucesso"})
 
+}
+
+func (c *contactController) GetContact(ctx *gin.Context) {
+	id := ctx.Param("id")
+	parsedID, _ := strconv.Atoi(id)
+
+	contact, err := c.contactUseCase.GetContact(parsedID)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, *contact)
+}
+
+func (c *contactController) UpdateContact(ctx *gin.Context) {
+	var changedData model.Contact
+	err := ctx.BindJSON(&changedData)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id := ctx.Param("id")
+	parsedID, _ := strconv.Atoi(id)
+	updatedContact, err := c.contactUseCase.UpdateContact(parsedID, &changedData)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, *updatedContact)
 }

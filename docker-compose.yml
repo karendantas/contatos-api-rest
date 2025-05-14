@@ -5,19 +5,18 @@ services:
       go_db:
         condition: service_healthy
         restart: true
-
+    env_file:
+      - .env
     volumes:
       - ./db/migrations/:/migrations
-    command: [ "-path", "/migrations", "-database", "postgres://postgres:1234@go_db:5432/contactListDB?sslmode=disable", "up" ]
+    command: [ "-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@go_db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${SSL_MODE}", "up" ]
     networks:
       - go-api-network
   go_db:
     container_name: go_db
     image: postgres:12
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     healthcheck:

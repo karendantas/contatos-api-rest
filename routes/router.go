@@ -10,13 +10,11 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine, db *sql.DB) {
-	//camada de repository
+
 	ContactRepository := repository.NewContactRepository(db)
 
-	//camada de usecase
 	ContactUseCase := usecase.NewContactUseCase(ContactRepository)
 
-	//camada de controllers
 	ContactController := controller.NewContactController(ContactUseCase)
 
 	api := router.Group("/api")
@@ -26,6 +24,8 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 			contact.GET("/", ContactController.GetContacts)
 			contact.POST("/", ContactController.CreateContacts )
 			contact.DELETE("/:id", ContactController.DeleteContact )
+			contact.GET("/:id", ContactController.GetContact)
+			contact.PUT("/:id", ContactController.UpdateContact)
 		}
 	}
 
