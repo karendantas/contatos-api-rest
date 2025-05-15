@@ -1,18 +1,38 @@
 package main
 
 import (
+	"fmt"
+	"go-api/db"
+	"go-api/routes"
+
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
-func main () {
+
+func main() {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Println("Error during the .env loading: ", err)
+	}
 	server := gin.Default()
 
-	// ponteiro para um contexto gin 
-	server.GET("/ping", func (ctx *gin.Context) {
-		//passava para o body a mensagem pong
-		ctx.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	server.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
+	dbConnection, err := db.ConnectDB()
+	if err != nil {
+		panic(err)
+	}
+
+	routes.SetupRoutes(server, dbConnection)
 	server.Run(":8000")
 }

@@ -1,15 +1,51 @@
 services:
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      go_db:
+        condition: service_healthy
+        restart: true
+    env_file:
+      - .env
+    volumes:
+      - ./db/migrations/:/migrations
+    command: [ "-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@go_db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${SSL_MODE}", "up" ]
+    networks:
+      - go-api-network
   go_db:
     container_name: go_db
     image: postgres:12
-    environment:
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+    env_file:
+      - .env
     ports:
       - "5432:5432"
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      interval: 10s
+      timeout: 3s
+      retries: 5
     volumes:
       - "pgdata:/var/lib/postgresql/data"
+    networks:
+      - go-api-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - go_db
+      - migrate
+    env_file:
+      - .env
+    networks:
+      - go-api-network
 
 volumes:
   pgdata: {}
+
+networks:
+  go-api-network:
+    driver: bridge
