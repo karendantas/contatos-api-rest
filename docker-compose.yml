@@ -29,6 +29,20 @@ services:
     networks:
       - go-api-network
 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - go_db
+      - migrate
+    env_file:
+      - .env
+    networks:
+      - go-api-network
+
 volumes:
   pgdata: {}
 
